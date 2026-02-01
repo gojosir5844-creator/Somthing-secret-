@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        /* Base Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffeef2;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 10;
+            width: 85%; /* Mobile friendly width */
+            max-width: 400px;
+            position: relative;
+        }
+
+        h1 { 
+            color: #d63384; 
+            margin-bottom: 1.5rem; 
+            font-size: 1.8rem;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            height: 120px;
+            position: relative;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            touch-action: manipulation; /* Prevents zooming on fast taps */
+        }
+
+        #yesBtn { 
+            background-color: #ff4d6d; 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        #noBtn { 
+            background-color: #6c757d; 
+            color: white; 
+            position: absolute; /* Needed for the movement logic */
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        /* Heart Balloons */
+        .balloon {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 2.5rem;
+            user-select: none;
+            z-index: 1;
+            animation: float 6s infinite ease-in-out;
+            pointer-events: none; /* So they don't block button clicks */
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-100px) rotate(20deg); }
+        }
+
+        .hidden { display: none; }
+        .success-msg { color: #d63384; font-size: 1.1rem; line-height: 1.6; }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5rem; }
+            #container { padding: 1.5rem; }
+            .balloon { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="balloon" style="top: 10%; left: 5%;">❤️</div>
+    <div class="balloon" style="top: 50%; left: 85%;">💖</div>
+    <div class="balloon" style="top: 85%; left: 10%;">💗</div>
+    <div class="balloon" style="top: 15%; left: 75%;">❤️</div>
+
+    <div id="container">
+        <div id="question-track">
+            <h1>Will you be my Valentine?</h1>
+            <div class="btn-container">
+                <button id="yesBtn" onclick="sayYes()">Yes</button>
+                <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+            </div>
+        </div>
+
+        <div id="answer-track" class="hidden">
+            <h1 style="font-size: 3rem;">🥰</h1>
+            <div class="success-msg">
+                <strong>I knew you would say yes!</strong><br><br>
+                Can't wait to see you today at:<br>
+                <span style="color: #ff4d6d; font-weight: bold;">[Hotel Name]</span><br>
+                at <span style="color: #ff4d6d; font-weight: bold;">[Time]</span><br><br>
+                ❤️
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            
+            // Calculate random positions
+            // On mobile, we limit the movement to stay mostly within viewable area
+            const padding = 50;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.position = 'fixed'; // Switch to fixed so it can move anywhere on screen
+        }
+
+        function sayYes() {
+            document.getElementById('question-track').classList.add('hidden');
+            document.getElementById('answer-track').classList.remove('hidden');
+            document.getElementById('noBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
